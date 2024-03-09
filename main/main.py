@@ -19,7 +19,7 @@ class AddressBook(App):
 
         # Input fields
         self.name_input = TextInput(hint_text='Enter Name', multiline=False)
-        self.email_input = TextInput(hint_text='Enter Email', multiline=False)
+        self.email_input = TextInput(hint_text='Enter Email', multiline=False, input_type='mail')
         self.phone_input = TextInput(hint_text='Enter Phone Number', multiline=False)
         self.address_input = TextInput(hint_text='Enter Address', multiline=False)
 
@@ -34,7 +34,7 @@ class AddressBook(App):
         self.name_input.bind(text=self.check_and_update_address)
         self.email_input.bind(text=self.check_and_update_address)
         self.phone_input.bind(text=self.check_and_update_address)
-        
+
         # Adding widgets to layout
         layout.add_widget(Label(text='Name:')) 
         layout.add_widget(self.name_input)
@@ -51,7 +51,7 @@ class AddressBook(App):
 
     def check_and_update_address(self, instance, value):
         name = self.name_input.text
-        email = self.email_input.text
+        email = self.email_input.text.lower()
         phone = self.phone_input.text
         
         query = {'name': name, 'email': email, 'phone': phone}
@@ -62,7 +62,7 @@ class AddressBook(App):
 
     def add_or_update_record(self, instance):
         name = self.name_input.text
-        email = self.email_input.text
+        email = self.email_input.text.lower()
         phone = self.phone_input.text
         address = self.address_input.text
         
@@ -86,7 +86,7 @@ class AddressBook(App):
 
     def delete_address(self, instance):
         name = self.name_input.text
-        email = self.email_input.text
+        email = self.email_input.text.lower()
         phone = self.phone_input.text
         
         # Clear address field
