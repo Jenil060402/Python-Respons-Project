@@ -7,6 +7,7 @@ from kivy.uix.button import Button
 from pymongo import MongoClient
 import pymongo
 
+
 class AddressBook(App):
     def build(self):
         uri = 'mongodb+srv://jenil060402:Je10514912nil%40@project1.agjazpp.mongodb.net/?retryWrites=true&w=majority&appName=Project1'
