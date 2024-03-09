@@ -16,13 +16,14 @@ class DatabaseViewer(App):
     def build(self):
         self.root_layout = GridLayout(cols=1, spacing=10, padding=10)
 
-        self.search_layout = GridLayout(cols=2, spacing=10)
+        self.search_layout = GridLayout(cols=2, spacing=5)
         self.search_label = Label(text="Search:")
         self.search_input = TextInput(hint_text="Enter search term")
         self.search_button = Button(text="Search", on_press=self.search_entries)
         self.search_layout.add_widget(self.search_label)
         self.search_layout.add_widget(self.search_input)
         self.search_layout.add_widget(self.search_button)
+        
 
         self.sort_layout = GridLayout(cols=3, spacing=10)
         self.sort_label = Label(text="Sort by:")
@@ -31,6 +32,8 @@ class DatabaseViewer(App):
         self.sort_layout.add_widget(self.sort_label)
         self.sort_layout.add_widget(self.sort_spinner)
         self.sort_layout.add_widget(self.sort_button)
+
+        
 
         self.entries_layout = GridLayout(cols=1, spacing=10)
         self.display_entries()
@@ -69,6 +72,8 @@ class DatabaseViewer(App):
             entry.pop('_id', None)  # Remove the ObjectID
             entry_label = Label(text=str(entry))
             self.entries_layout.add_widget(entry_label)
+   
+
 
 if __name__ == "__main__":
     client = pymongo.MongoClient('mongodb+srv://jenil060402:Je10514912nil%40@project1.agjazpp.mongodb.net/?retryWrites=true&w=majority&appName=Project1')  # Assuming MongoDB is running locally
