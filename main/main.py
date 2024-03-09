@@ -3,6 +3,8 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.uix.boxlayout import BoxLayout
 from pymongo import MongoClient
 import pymongo
 
@@ -29,7 +31,7 @@ class AddressBook(App):
         
         # Binding buttons to functions
         add_update_button.bind(on_press=self.add_or_update_record)
-        delete_button.bind(on_press=self.delete_address)
+        delete_button.bind(on_press=self.confirm_delete)
 
         self.name_input.bind(text=self.check_and_update_address)
         self.email_input.bind(text=self.check_and_update_address)
@@ -82,7 +84,26 @@ class AddressBook(App):
         self.phone_input.text = ''
         self.address_input.text = ''
     
-    
+    def confirm_delete(self, instance):
+        # Define the content of the popup
+        content = BoxLayout(orientation='vertical')
+        content.add_widget(Label(text='Are you sure?'))
+
+        # Define the buttons of the popup
+        confirm_button = Button(text='Confirm')
+        cancel_button = Button(text='Cancel')
+
+        # Define the actions for the buttons
+        confirm_button.bind(on_press=self.delete_address)
+        cancel_button.bind(on_press=self.dismiss_popup)
+
+        # Add buttons to the content layout
+        content.add_widget(confirm_button)
+        content.add_widget(cancel_button)
+
+        # Create and open the popup
+        self.popup = Popup(title='Delete Confirmation', content=content, size_hint=(None, None), size=(300, 200))
+        self.popup.open()
 
     def delete_address(self, instance):
         name = self.name_input.text
@@ -95,6 +116,13 @@ class AddressBook(App):
         
         # Clear address input field
         self.address_input.text = ''
+
+        # Close the popup
+        self.dismiss_popup()
+
+    def dismiss_popup(self, instance):
+        # Dismiss the popup
+        self.popup.dismiss()
 
     def on_stop(self):
         self.client.close()
