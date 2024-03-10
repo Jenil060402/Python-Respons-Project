@@ -1,4 +1,3 @@
-#all the imports necessary
 import logging
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
@@ -20,15 +19,8 @@ class AddressBook(App):
             # MongoDB connection
             uri = 'mongodb+srv://jenil060402:Je10514912nil%40@project1.agjazpp.mongodb.net/?retryWrites=true&w=majority&appName=Project1'
             self.client = pymongo.MongoClient(uri)
-            #database connection
             self.db = self.client['address_book']
-            #collection check
             self.collection = self.db['contacts']
-            # enforce a unique constraint
-            # Ensures  that each email address can only be associated with one record
-            # in the collection. If an attempt is made to insert a new record with an 
-            # email address that already exists, MongoDB will raise a duplicate key error.
-            self.collection.create_index([('email', pymongo.ASCENDING)], unique=True)
             
             # UI layout
             layout = GridLayout(cols=2, spacing=10, padding=10)
@@ -37,7 +29,7 @@ class AddressBook(App):
             self.name_input = TextInput(hint_text='Enter Name', multiline=False)
             self.email_input = TextInput(hint_text='Enter Email', multiline=False, input_type='mail')
             self.phone_input = TextInput(hint_text='Enter Phone Number', multiline=False)
-            self.address_input = TextInput(hint_text='Enter Address (House No, Street, Locality, City, Pincode)', multiline=True)
+            self.address_input = TextInput(hint_text='Enter Address', multiline=False)
 
             # Buttons
             add_update_button = Button(text='Add/Update Record')
@@ -65,7 +57,7 @@ class AddressBook(App):
 
             return layout
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
             raise
 
     def check_and_update_address(self, instance, value):
@@ -80,7 +72,7 @@ class AddressBook(App):
             if existing_contact:
                 self.address_input.text = existing_contact.get('address', '')
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
     def add_or_update_record(self, instance):
         try:
@@ -105,7 +97,7 @@ class AddressBook(App):
             self.phone_input.text = ''
             self.address_input.text = ''
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
     def confirm_delete(self, instance):
         try:
@@ -129,7 +121,7 @@ class AddressBook(App):
             self.popup = Popup(title='Delete Confirmation', content=content, size_hint=(None, None), size=(300, 200))
             self.popup.open()
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
     def delete_address(self, instance):
         try:
@@ -147,20 +139,20 @@ class AddressBook(App):
             # Close the popup
             self.dismiss_popup()
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
     def dismiss_popup(self, instance):
         try:
             # Dismiss the popup
             self.popup.dismiss()
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
     def on_stop(self):
         try:
             self.client.close()
         except Exception as e:
-            logging.error(f"An error occurred: {type(e).__name__} - {e}")
+            logging.error(f"An error occurred: {e}")
 
 if __name__ == '__main__':
     AddressBook().run()
