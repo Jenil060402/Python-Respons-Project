@@ -9,9 +9,9 @@ from kivy.uix.boxlayout import BoxLayout
 from pymongo import MongoClient
 import pymongo
 
-# Configure logging
 logging.basicConfig(filename='address_book.log', level=logging.ERROR,
                     format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class AddressBook(App):
     def build(self):
@@ -80,7 +80,15 @@ class AddressBook(App):
             email = self.email_input.text.lower()
             phone = self.phone_input.text
             address = self.address_input.text
-            
+
+            # Form validation
+            if not self.is_valid_email(email):
+                self.show_error_popup("Invalid Email")
+                return
+            if not address:
+                self.show_error_popup("Address cannot be empty")
+                return
+
             # Check if record exists
             existing_record = self.collection.find_one({'name': name, 'email': email, 'phone': phone})
             if existing_record:
@@ -90,7 +98,7 @@ class AddressBook(App):
             else:
                 # Insert new record
                 self.collection.insert_one({'name': name, 'email': email, 'phone': phone, 'address': address})
-            
+
             # Clear input fields
             self.name_input.text = ''
             self.email_input.text = ''
@@ -98,6 +106,18 @@ class AddressBook(App):
             self.address_input.text = ''
         except Exception as e:
             logging.error(f"An error occurred: {e}")
+
+    def is_valid_email(self, email):
+        # Basic email validation
+        return '@' in email and '.' in email
+
+    def show_error_popup(self, message):
+        # Display error popup
+        content = BoxLayout(orientation='vertical')
+        content.add_widget(Label(text=message))
+
+        error_popup = Popup(title='Error', content=content, size_hint=(None, None), size=(300, 200))
+        error_popup.open()
 
     def confirm_delete(self, instance):
         try:
